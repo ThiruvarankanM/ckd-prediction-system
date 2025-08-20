@@ -2,7 +2,8 @@
 
 A **Streamlit-based machine learning application** that predicts the likelihood of **Chronic Kidney Disease (CKD)** using clinical and laboratory parameters. This tool provides an interactive interface for entering patient data and generates predictions along with confidence scores.
 
-> **Note:** A `Dockerfile` is included for containerized deployment, but it is optional and not required to run the app locally.
+> **Note:** A `Dockerfile` is included for containerized deployment, but it is optional and not required to run the app locally.  
+> **Live Demo:** The app is deployed on Streamlit Cloud — [Click here to try it](https://share.streamlit.io/sample-user/ckd-prediction-system/main/app.py)
 
 ---
 
@@ -32,9 +33,7 @@ A **Streamlit-based machine learning application** that predicts the likelihood 
 
 ---
 
-## 🚀 Demo
-
-You can run the app locally:
+## 🚀 How to Run Locally
 
 ```bash
 # Install dependencies
@@ -42,3 +41,38 @@ pip install -r requirements.txt
 
 # Run the Streamlit app
 streamlit run app.py
+````
+
+---
+
+## 📊 Dataset & Model
+
+* Trained on a CKD dataset with 24 clinical parameters.
+* Preprocessing: missing value imputation, outlier handling, feature scaling.
+* Machine learning model: Supports probability scores for prediction confidence.
+* Model file: `ckd_model.pkl`
+
+---
+
+## ⚠️ Disclaimer
+
+This application is **for educational and screening purposes only**.
+It is **not a substitute for professional medical advice, diagnosis, or treatment**.
+Always consult with qualified healthcare professionals for proper evaluation.
+
+---
+
+## 📚 Tech Stack
+
+* **Python**
+* **Streamlit** (UI)
+* **scikit-learn** (Machine Learning)
+* **Pandas & NumPy** (Data handling)
+* **Matplotlib & Seaborn** (Visualizations)
+
+---
+
+## 💡 Author
+
+**Thiruvarankan Mathurakaran**
+[GitHub Profile](https://github.com/yourusername)
