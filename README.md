@@ -2,6 +2,8 @@
 
 A **Streamlit-based machine learning application** that predicts the likelihood of **Chronic Kidney Disease (CKD)** using clinical and laboratory parameters. This tool provides an interactive interface for entering patient data and generates predictions along with confidence scores.
 
+> **Note:** A `Dockerfile` is included for containerized deployment, but it is optional and not required to run the app locally.
+
 ---
 
 ## 🌟 Features
