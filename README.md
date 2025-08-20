@@ -75,4 +75,4 @@ Always consult with qualified healthcare professionals for proper evaluation.
 ## 💡 Author
 
 **Thiruvarankan Mathurakaran**
-[GitHub Profile](https://github.com/yourusername)
+[GitHub Profile](https://github.com/ThiruvarankanM)
