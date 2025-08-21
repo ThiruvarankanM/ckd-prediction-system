@@ -126,128 +126,122 @@ if page == "Prediction":
     
     with col2:
         with st.expander("🟡 Optional Additional Tests", expanded=False):
-                st.markdown("*These can help improve accuracy but are not essential*")
-                
-                blood_glucose_random = st.number_input("Blood Glucose Random (mgs/dl)", min_value=50, max_value=500, value=120)
-                sodium = st.number_input("Sodium (mEq/L)", min_value=120, max_value=160, value=140)
-                potassium = st.number_input("Potassium (mEq/L)", min_value=2.0, max_value=8.0, value=4.5, step=0.1)
-                packed_cell_volume = st.number_input("Packed Cell Volume", min_value=20, max_value=60, value=40)
-                white_blood_cell_count = st.number_input("White Blood Cell Count (cells/cumm)", min_value=3000, max_value=20000, value=7500)
-                red_blood_cell_count = st.number_input("Red Blood Cell Count (millions/cmm)", min_value=2.0, max_value=8.0, value=4.5, step=0.1)
-                
-                red_blood_cells = st.selectbox("Red Blood Cells", ["Normal", "Abnormal"])
-                pus_cell = st.selectbox("Pus Cell", ["Normal", "Abnormal"])
-                pus_cell_clumps = st.selectbox("Pus Cell Clumps", ["Not Present", "Present"])
-                bacteria = st.selectbox("Bacteria", ["Not Present", "Present"])
-                
-                coronary_artery_disease = st.selectbox("Coronary Artery Disease", ["No", "Yes"])
-                appetite = st.selectbox("Appetite", ["Good", "Poor"])
-                peda_edema = st.selectbox("Pedal Edema", ["No", "Yes"])
-                anemia = st.selectbox("Anemia", ["No", "Yes"])
+            st.markdown("*These can help improve accuracy but are not essential*")
             
+            blood_glucose_random = st.number_input("Blood Glucose Random (mgs/dl)", min_value=50, max_value=500, value=120)
+            sodium = st.number_input("Sodium (mEq/L)", min_value=120, max_value=160, value=140)
+            potassium = st.number_input("Potassium (mEq/L)", min_value=2.0, max_value=8.0, value=4.5, step=0.1)
+            packed_cell_volume = st.number_input("Packed Cell Volume", min_value=20, max_value=60, value=40)
+            white_blood_cell_count = st.number_input("White Blood Cell Count (cells/cumm)", min_value=3000, max_value=20000, value=7500)
+            red_blood_cell_count = st.number_input("Red Blood Cell Count (millions/cmm)", min_value=2.0, max_value=8.0, value=4.5, step=0.1)
+            
+            red_blood_cells = st.selectbox("Red Blood Cells", ["Normal", "Abnormal"])
+            pus_cell = st.selectbox("Pus Cell", ["Normal", "Abnormal"])
+            pus_cell_clumps = st.selectbox("Pus Cell Clumps", ["Not Present", "Present"])
+            bacteria = st.selectbox("Bacteria", ["Not Present", "Present"])
+            
+            coronary_artery_disease = st.selectbox("Coronary Artery Disease", ["No", "Yes"])
+            appetite = st.selectbox("Appetite", ["Good", "Poor"])
+            peda_edema = st.selectbox("Pedal Edema", ["No", "Yes"])
+            anemia = st.selectbox("Anemia", ["No", "Yes"])
+        
+        st.markdown("---")
+        st.subheader("🚀 Quick Prediction")
+        quick_predict = st.checkbox("Use Quick Prediction (Essential parameters only)")
+    
+    # Convert categorical inputs to numerical
+    def convert_to_numeric(value_dict):
+        conversions = {
+            'red_blood_cells': {'Normal': 1, 'Abnormal': 0},
+            'pus_cell': {'Normal': 1, 'Abnormal': 0},
+            'pus_cell_clumps': {'Not Present': 0, 'Present': 1},
+            'bacteria': {'Not Present': 0, 'Present': 1},
+            'hypertension': {'No': 0, 'Yes': 1},
+            'diabetes_mellitus': {'No': 0, 'Yes': 1},
+            'coronary_artery_disease': {'No': 0, 'Yes': 1},
+            'appetite': {'Good': 1, 'Poor': 0},
+            'peda_edema': {'No': 0, 'Yes': 1},
+            'anemia': {'No': 0, 'Yes': 1}
+        }
+        
+        numeric_dict = {}
+        for key, value in value_dict.items():
+            if key in conversions:
+                numeric_dict[key] = conversions[key][value]
+            else:
+                numeric_dict[key] = value
+        return numeric_dict
+    
+    # Predict button
+    predict_button_text = "🚀 Quick Predict (Essential Only)" if quick_predict else "🔬 Predict Kidney Disease (All Parameters)"
+    
+    if st.button(predict_button_text, type="primary"):
+        try:
+            # Prepare input data
+            if quick_predict:
+                input_data = {
+                    'age': age, 'blood_pressure': blood_pressure, 'specific_gravity': specific_gravity,
+                    'albumin': albumin, 'sugar': sugar, 'red_blood_cells': "Normal",
+                    'pus_cell': "Normal", 'pus_cell_clumps': "Not Present", 'bacteria': "Not Present",
+                    'blood_glucose_random': 120, 'blood_urea': blood_urea, 'serum_creatinine': serum_creatinine,
+                    'sodium': 140, 'potassium': 4.5, 'haemoglobin': haemoglobin, 'packed_cell_volume': 40,
+                    'white_blood_cell_count': 7500, 'red_blood_cell_count': 4.5, 'hypertension': hypertension,
+                    'diabetes_mellitus': diabetes_mellitus, 'coronary_artery_disease': "No",
+                    'appetite': "Good", 'peda_edema': "No", 'anemia': "No"
+                }
+            else:
+                input_data = {
+                    'age': age, 'blood_pressure': blood_pressure, 'specific_gravity': specific_gravity,
+                    'albumin': albumin, 'sugar': sugar, 'red_blood_cells': red_blood_cells,
+                    'pus_cell': pus_cell, 'pus_cell_clumps': pus_cell_clumps, 'bacteria': bacteria,
+                    'blood_glucose_random': blood_glucose_random, 'blood_urea': blood_urea,
+                    'serum_creatinine': serum_creatinine, 'sodium': sodium, 'potassium': potassium,
+                    'haemoglobin': haemoglobin, 'packed_cell_volume': packed_cell_volume,
+                    'white_blood_cell_count': white_blood_cell_count, 'red_blood_cell_count': red_blood_cell_count,
+                    'hypertension': hypertension, 'diabetes_mellitus': diabetes_mellitus,
+                    'coronary_artery_disease': coronary_artery_disease, 'appetite': appetite,
+                    'peda_edema': peda_edema, 'anemia': anemia
+                }
+            
+            # Convert to numeric
+            numeric_data = convert_to_numeric(input_data)
+            
+            # Create DataFrame
+            feature_names = ['age', 'blood_pressure', 'specific_gravity', 'albumin', 'sugar',
+                           'red_blood_cells', 'pus_cell', 'pus_cell_clumps', 'bacteria',
+                           'blood_glucose_random', 'blood_urea', 'serum_creatinine', 'sodium',
+                           'potassium', 'haemoglobin', 'packed_cell_volume', 'white_blood_cell_count',
+                           'red_blood_cell_count', 'hypertension', 'diabetes_mellitus',
+                           'coronary_artery_disease', 'appetite', 'peda_edema', 'anemia']
+            
+            input_df = pd.DataFrame([numeric_data], columns=feature_names)
+            
+            # Make prediction
+            prediction = model.predict(input_df)[0]
+            prediction_proba = model.predict_proba(input_df)[0] if hasattr(model, 'predict_proba') else None
+            
+            # Display results
             st.markdown("---")
-            st.subheader("🚀 Quick Prediction")
-            quick_predict = st.checkbox("Use Quick Prediction (Essential parameters only)")
-        
-        # Convert categorical inputs to numerical
-        def convert_to_numeric(value_dict):
-            conversions = {
-                'red_blood_cells': {'Normal': 1, 'Abnormal': 0},
-                'pus_cell': {'Normal': 1, 'Abnormal': 0},
-                'pus_cell_clumps': {'Not Present': 0, 'Present': 1},
-                'bacteria': {'Not Present': 0, 'Present': 1},
-                'hypertension': {'No': 0, 'Yes': 1},
-                'diabetes_mellitus': {'No': 0, 'Yes': 1},
-                'coronary_artery_disease': {'No': 0, 'Yes': 1},
-                'appetite': {'Good': 1, 'Poor': 0},
-                'peda_edema': {'No': 0, 'Yes': 1},
-                'anemia': {'No': 0, 'Yes': 1}
-            }
+            st.header("📊 Prediction Results")
             
-            numeric_dict = {}
-            for key, value in value_dict.items():
-                if key in conversions:
-                    numeric_dict[key] = conversions[key][value]
-                else:
-                    numeric_dict[key] = value
-            return numeric_dict
-        
-        # Predict button
-        predict_button_text = "🚀 Quick Predict (Essential Only)" if quick_predict else "🔬 Predict Kidney Disease (All Parameters)"
-        
-        if st.button(predict_button_text, type="primary"):
-            try:
-                # Prepare input data
-                if quick_predict:
-                    input_data = {
-                        'age': age, 'blood_pressure': blood_pressure, 'specific_gravity': specific_gravity,
-                        'albumin': albumin, 'sugar': sugar, 'red_blood_cells': "Normal",
-                        'pus_cell': "Normal", 'pus_cell_clumps': "Not Present", 'bacteria': "Not Present",
-                        'blood_glucose_random': 120, 'blood_urea': blood_urea, 'serum_creatinine': serum_creatinine,
-                        'sodium': 140, 'potassium': 4.5, 'haemoglobin': haemoglobin, 'packed_cell_volume': 40,
-                        'white_blood_cell_count': 7500, 'red_blood_cell_count': 4.5, 'hypertension': hypertension,
-                        'diabetes_mellitus': diabetes_mellitus, 'coronary_artery_disease': "No",
-                        'appetite': "Good", 'peda_edema': "No", 'anemia': "No"
-                    }
-                else:
-                    input_data = {
-                        'age': age, 'blood_pressure': blood_pressure, 'specific_gravity': specific_gravity,
-                        'albumin': albumin, 'sugar': sugar, 'red_blood_cells': red_blood_cells,
-                        'pus_cell': pus_cell, 'pus_cell_clumps': pus_cell_clumps, 'bacteria': bacteria,
-                        'blood_glucose_random': blood_glucose_random, 'blood_urea': blood_urea,
-                        'serum_creatinine': serum_creatinine, 'sodium': sodium, 'potassium': potassium,
-                        'haemoglobin': haemoglobin, 'packed_cell_volume': packed_cell_volume,
-                        'white_blood_cell_count': white_blood_cell_count, 'red_blood_cell_count': red_blood_cell_count,
-                        'hypertension': hypertension, 'diabetes_mellitus': diabetes_mellitus,
-                        'coronary_artery_disease': coronary_artery_disease, 'appetite': appetite,
-                        'peda_edema': peda_edema, 'anemia': anemia
-                    }
-                
-                # Convert to numeric
-                numeric_data = convert_to_numeric(input_data)
-                
-                # Create DataFrame
-                feature_names = ['age', 'blood_pressure', 'specific_gravity', 'albumin', 'sugar',
-                               'red_blood_cells', 'pus_cell', 'pus_cell_clumps', 'bacteria',
-                               'blood_glucose_random', 'blood_urea', 'serum_creatinine', 'sodium',
-                               'potassium', 'haemoglobin', 'packed_cell_volume', 'white_blood_cell_count',
-                               'red_blood_cell_count', 'hypertension', 'diabetes_mellitus',
-                               'coronary_artery_disease', 'appetite', 'peda_edema', 'anemia']
-                
-                input_df = pd.DataFrame([numeric_data], columns=feature_names)
-                
-                # Make prediction
-                prediction = model.predict(input_df)[0]
-                prediction_proba = model.predict_proba(input_df)[0] if hasattr(model, 'predict_proba') else None
-                
-                # Display results
-                st.markdown("---")
-                st.header("📊 Prediction Results")
-                
-                if prediction == 1:
-                    st.error("**🚨 Prediction: Chronic Kidney Disease Detected**")
-                    st.markdown("⚠️ The model indicates a high likelihood of chronic kidney disease. Please consult with a healthcare professional immediately.")
-                else:
-                    st.success("**✅ Prediction: No Chronic Kidney Disease**")
-                    st.markdown("✅ The model indicates a low likelihood of chronic kidney disease. Regular check-ups are still recommended.")
-                
-                if prediction_proba is not None:
-                    st.subheader("📈 Prediction Confidence")
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.metric("No CKD Probability", f"{prediction_proba[0]:.2%}")
-                    with col2:
-                        st.metric("CKD Probability", f"{prediction_proba[1]:.2%}")
-                
-            except Exception as e:
-                st.error(f"❌ Error making prediction: {str(e)}")
-                st.info("Please check that all input values are valid and try again.")
-    else:
-        st.error("❌ Cannot make predictions - Model not loaded")
-        st.info("Please resolve the deployment issues shown in the debug information above.")
-    else:
-        st.error("❌ Cannot make predictions - Model not loaded")
-        st.info("Please resolve the deployment issues shown in the debug information above.")
+            if prediction == 1:
+                st.error("**🚨 Prediction: Chronic Kidney Disease Detected**")
+                st.markdown("⚠️ The model indicates a high likelihood of chronic kidney disease. Please consult with a healthcare professional immediately.")
+            else:
+                st.success("**✅ Prediction: No Chronic Kidney Disease**")
+                st.markdown("✅ The model indicates a low likelihood of chronic kidney disease. Regular check-ups are still recommended.")
+            
+            if prediction_proba is not None:
+                st.subheader("📈 Prediction Confidence")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("No CKD Probability", f"{prediction_proba[0]:.2%}")
+                with col2:
+                    st.metric("CKD Probability", f"{prediction_proba[1]:.2%}")
+            
+        except Exception as e:
+            st.error(f"❌ Error making prediction: {str(e)}")
+            st.info("Please check that all input values are valid and try again.")
 
 elif page == "About the Model":
     st.header("📚 About the Prediction Model")
