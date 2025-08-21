@@ -13,34 +13,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Debug information - Add this early to see what's happening
-st.sidebar.markdown("### 🐛 Debug Information")
-st.sidebar.write(f"Python version: {sys.version}")
-st.sidebar.write(f"Platform: {platform.platform()}")
-
-try:
-    import sklearn
-    st.sidebar.write(f"✅ Scikit-learn: {sklearn.__version__}")
-except ImportError as e:
-    st.sidebar.error(f"❌ Scikit-learn error: {e}")
-
-try:
-    import matplotlib
-    st.sidebar.write(f"✅ Matplotlib: {matplotlib.__version__}")
-except ImportError as e:
-    st.sidebar.error(f"❌ Matplotlib error: {e}")
-
-try:
-    import seaborn
-    st.sidebar.write(f"✅ Seaborn: {seaborn.__version__}")
-except ImportError as e:
-    st.sidebar.error(f"❌ Seaborn error: {e}")
-
-# Check if model file exists
+# Check if model file exists (silent check)
 model_path = Path("ckd_model.pkl")
-st.sidebar.write(f"Model file exists: {model_path.exists()}")
-if model_path.exists():
-    st.sidebar.write(f"Model file size: {model_path.stat().st_size / 1024:.2f} KB")
 
 # Load the trained model with comprehensive error handling
 @st.cache_resource
@@ -56,15 +30,12 @@ def load_model():
         with open('ckd_model.pkl', 'rb') as file:
             model = pickle.load(file)
             
-        st.sidebar.success("✅ Model loaded successfully!")
+        st.success("✅ Model loaded successfully!")
         return model
         
     except ImportError as e:
-        st.sidebar.error(f"❌ Import error: {e}")
         return None
     except Exception as e:
-        st.sidebar.error(f"❌ Model loading error: {str(e)}")
-        st.sidebar.error("This is likely due to Python/library version mismatch")
         return None
 
 # Create a fallback dummy model for demonstration
@@ -80,43 +51,31 @@ def create_dummy_model():
         model = RandomForestClassifier(n_estimators=10, random_state=42)
         model.fit(X, y)
         
-        st.sidebar.warning("⚠️ Using dummy model for demonstration")
+        st.info("⚠️ Using demonstration model (real model unavailable)")
         return model
     except Exception as e:
-        st.sidebar.error(f"❌ Could not create dummy model: {e}")
         return None
 
-# Try to load model
+# Try to load model (silent operation)
+model = None
 try:
     model = load_model()
     if model is None:
-        st.warning("⚠️ Real model could not be loaded. Creating a dummy model for demonstration...")
         model = create_dummy_model()
 except Exception as e:
-    st.error(f"❌ Critical error during model loading: {e}")
     model = None
 
 # Title and description
 st.title("🏥 Chronic Kidney Disease Prediction System")
 st.markdown("---")
 
-# Show deployment status
+# Show deployment status only if there's an issue
 if model is None:
-    st.error("❌ **Deployment Issue**: Model could not be loaded")
+    st.error("❌ **System Unavailable**: Unable to load prediction model")
     st.markdown("""
-    ### Possible Issues:
-    1. **Model file missing** from GitHub repository
-    2. **Python version mismatch** (Cloud: 3.13.5 vs Training environment)
-    3. **Library version incompatibility**
-    4. **Pickle serialization issues**
-    
-    ### Solutions:
-    1. Ensure `ckd_model.pkl` is in your GitHub repo
-    2. Retrain model with Python 3.13 and current library versions
-    3. Use joblib instead of pickle for model serialization
+    The prediction system is currently unavailable. Please try again later or contact support.
     """)
-else:
-    st.success("✅ **System Status**: Model loaded successfully!")
+    st.stop()  # Stop execution here if model is not available
 
 st.markdown("""
 This application uses machine learning to predict the likelihood of chronic kidney disease based on various medical parameters. 
@@ -125,11 +84,22 @@ Please enter the patient's medical information below to get a prediction.
 
 # Sidebar for navigation
 st.sidebar.title("🧭 Navigation")
-page = st.sidebar.selectbox("Choose a page:", ["Prediction", "About the Model", "Dataset Info", "Debug Info"])
+page = st.sidebar.selectbox("Choose a page:", ["Prediction", "About the Model", "Dataset Info"])
+
+# Add debug toggle in sidebar (collapsed by default)
+with st.sidebar.expander("🔧 System Information", expanded=False):
+    st.write(f"Python: {sys.version.split()[0]}")
+    try:
+        import sklearn
+        st.write(f"Scikit-learn: {sklearn.__version__}")
+    except:
+        st.write("Scikit-learn: Not available")
+    st.write(f"Model Status: {'✅ Loaded' if model else '❌ Failed'}")
+    if model_path.exists():
+        st.write(f"Model Size: {model_path.stat().st_size / 1024:.1f} KB")
 
 if page == "Prediction":
-    if model is not None:
-        st.header("📝 Patient Information Input")
+    st.header("📝 Patient Information Input")
         st.markdown("**Required fields are marked with * - Optional fields can be left as default values**")
         
         # Create two columns for better layout
@@ -272,6 +242,9 @@ if page == "Prediction":
             except Exception as e:
                 st.error(f"❌ Error making prediction: {str(e)}")
                 st.info("Please check that all input values are valid and try again.")
+    else:
+        st.error("❌ Cannot make predictions - Model not loaded")
+        st.info("Please resolve the deployment issues shown in the debug information above.")
     else:
         st.error("❌ Cannot make predictions - Model not loaded")
         st.info("Please resolve the deployment issues shown in the debug information above.")
