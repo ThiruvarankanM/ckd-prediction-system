@@ -100,32 +100,32 @@ with st.sidebar.expander("🔧 System Information", expanded=False):
 
 if page == "Prediction":
     st.header("📝 Patient Information Input")
-        st.markdown("**Required fields are marked with * - Optional fields can be left as default values**")
+    st.markdown("**Required fields are marked with * - Optional fields can be left as default values**")
+    
+    # Create two columns for better layout
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🔴 Essential Information")
+        age = st.number_input("Age* (years)", min_value=1, max_value=120, value=50)
+        blood_pressure = st.number_input("Blood Pressure* (mm Hg)", min_value=50, max_value=200, value=120)
+        specific_gravity = st.number_input("Specific Gravity* (urine)", min_value=1.005, max_value=1.025, value=1.020, step=0.005)
         
-        # Create two columns for better layout
-        col1, col2 = st.columns(2)
+        st.subheader("🔴 Critical Blood Tests")
+        serum_creatinine = st.number_input("Serum Creatinine* (mgs/dl)", min_value=0.5, max_value=15.0, value=1.2, step=0.1)
+        haemoglobin = st.number_input("Haemoglobin* (gms)", min_value=5.0, max_value=20.0, value=12.5, step=0.1)
+        blood_urea = st.number_input("Blood Urea* (mgs/dl)", min_value=10, max_value=200, value=40)
         
-        with col1:
-            st.subheader("🔴 Essential Information")
-            age = st.number_input("Age* (years)", min_value=1, max_value=120, value=50)
-            blood_pressure = st.number_input("Blood Pressure* (mm Hg)", min_value=50, max_value=200, value=120)
-            specific_gravity = st.number_input("Specific Gravity* (urine)", min_value=1.005, max_value=1.025, value=1.020, step=0.005)
-            
-            st.subheader("🔴 Critical Blood Tests")
-            serum_creatinine = st.number_input("Serum Creatinine* (mgs/dl)", min_value=0.5, max_value=15.0, value=1.2, step=0.1)
-            haemoglobin = st.number_input("Haemoglobin* (gms)", min_value=5.0, max_value=20.0, value=12.5, step=0.1)
-            blood_urea = st.number_input("Blood Urea* (mgs/dl)", min_value=10, max_value=200, value=40)
-            
-            st.subheader("🔴 Essential Urine Tests")
-            albumin = st.selectbox("Albumin* (protein in urine)", [0, 1, 2, 3, 4, 5])
-            sugar = st.selectbox("Sugar* (in urine)", [0, 1, 2, 3, 4, 5])
-            
-            st.subheader("🔴 Medical History")
-            diabetes_mellitus = st.selectbox("Diabetes Mellitus*", ["No", "Yes"])
-            hypertension = st.selectbox("Hypertension*", ["No", "Yes"])
+        st.subheader("🔴 Essential Urine Tests")
+        albumin = st.selectbox("Albumin* (protein in urine)", [0, 1, 2, 3, 4, 5])
+        sugar = st.selectbox("Sugar* (in urine)", [0, 1, 2, 3, 4, 5])
         
-        with col2:
-            with st.expander("🟡 Optional Additional Tests", expanded=False):
+        st.subheader("🔴 Medical History")
+        diabetes_mellitus = st.selectbox("Diabetes Mellitus*", ["No", "Yes"])
+        hypertension = st.selectbox("Hypertension*", ["No", "Yes"])
+    
+    with col2:
+        with st.expander("🟡 Optional Additional Tests", expanded=False):
                 st.markdown("*These can help improve accuracy but are not essential*")
                 
                 blood_glucose_random = st.number_input("Blood Glucose Random (mgs/dl)", min_value=50, max_value=500, value=120)
@@ -274,29 +274,6 @@ elif page == "Dataset Info":
     - **Target Variable:** Binary classification (CKD vs No CKD)
     - **Data Types:** Mixed (numerical and categorical)
     """)
-
-elif page == "Debug Info":
-    st.header("🐛 Debug Information")
-    
-    st.subheader("Environment Information")
-    st.write(f"**Python Version:** {sys.version}")
-    st.write(f"**Platform:** {platform.platform()}")
-    
-    st.subheader("Library Versions")
-    libraries = ['streamlit', 'pandas', 'numpy', 'sklearn', 'matplotlib', 'seaborn']
-    for lib in libraries:
-        try:
-            module = __import__(lib)
-            version = getattr(module, '__version__', 'Unknown')
-            st.write(f"✅ **{lib}:** {version}")
-        except ImportError:
-            st.write(f"❌ **{lib}:** Not installed")
-    
-    st.subheader("File System")
-    st.write(f"**Current Directory:** {Path.cwd()}")
-    st.write(f"**Files in directory:**")
-    for file in Path.cwd().iterdir():
-        st.write(f"  - {file.name} ({'Directory' if file.is_dir() else f'{file.stat().st_size} bytes'})")
 
 # Footer
 st.markdown("---")
