@@ -3,7 +3,7 @@
 A **Streamlit-based machine learning application** that predicts the likelihood of **Chronic Kidney Disease (CKD)** using clinical and laboratory parameters. This tool provides an interactive interface for entering patient data and generates predictions along with confidence scores.
 
 > **Note:** A `Dockerfile` is included for containerized deployment, but it is optional and not required to run the app locally.  
-> **Live Demo:** The app is deployed on Streamlit Cloud — [Click here to try it](https://share.streamlit.io/sample-user/ckd-prediction-system/main/app.py)
+> **Live Demo:** The app is deployed on Streamlit Cloud — [Click here]([https://share.streamlit.io/sample-user/ckd-prediction-system/main/app.py](https://ckd-prediction-system.streamlit.app/))
 
 ---
 
@@ -71,6 +71,13 @@ Always consult with qualified healthcare professionals for proper evaluation.
 * **Matplotlib & Seaborn** (Visualizations)
 
 ---
+## 🎥 Working Demo Video
+
+Watch the final demonstration of the **Chronic Kidney Disease (CKD) Prediction System** here:  
+[![Demo Video](https://img.youtube.com/vi/VpKk3xld2jM/0.jpg)](https://youtu.be/VpKk3xld2jM)
+
+Or click this link: [https://youtu.be/VpKk3xld2jM](https://youtu.be/VpKk3xld2jM)
+
 
 ## 💡 Author
 
